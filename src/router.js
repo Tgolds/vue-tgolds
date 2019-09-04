@@ -2,15 +2,24 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './components/Login.vue'
 import Home from './components/Home.vue'
+import Welcom from './components/welcom.vue'
+import Users from './components/users/Users.vue'
 Vue.use(Router)
 
+const originalPush = Router.prototype.push;
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
  const router =  new Router({
   routes: [
     {path:"/",redirect:"/login"},
     //登录组件
     {path:'/login',component:Login},
     //home组件
-    {path:'/home',component:Home}
+    {path:'/home',component:Home,redirect:'/welcom',children:[
+      {path:'/welcom',component:Welcom},
+      {path:'/users',component:Users}
+    ]}
   ]
 })
 //配置全局路由守卫
