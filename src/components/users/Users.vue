@@ -37,7 +37,7 @@
             <el-button type="danger" icon="el-icon-delete" @click="delUser(scope.row.id)"></el-button>
             <!-- 分配角色 -->
             <el-tooltip content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting"></el-button>
+              <el-button type="warning" icon="el-icon-setting" @click="usersfp(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -93,6 +93,22 @@
         <el-button type="primary" @click="IdUpuserfrom">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="分配角色" :visible.sync="Usersfenpei" width="30%" @close = 'fpclose' >
+      <p>当前用户:{{UsersInfo.username}}</p>
+      <p>当前角色:{{UsersInfo.role_name}}</p>
+      <el-select v-model="allRolsInfo" placeholder="请选择">
+        <el-option
+          v-for="item in allUserInfo"
+          :key="item.id"
+          :label="item.roleName"
+          :value="item.id"
+        ></el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="Usersfenpei = false">取 消</el-button>
+        <el-button type="primary" @click="fpjuese">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -134,6 +150,15 @@ export default {
         email: "",
         mobile: ""
       },
+      //分配角色对话框显示隐藏
+      Usersfenpei: false,
+      //需要被分配的角色用户信息
+      UsersInfo: {},
+      //所有角色数据列表
+      allUserInfo :[],
+      //下拉列表选中的角色
+      allRolsInfo : [],
+
       AddRules: {
         username: [
           { required: true, message: "请输入活动名称", trigger: "blur" },
@@ -161,9 +186,9 @@ export default {
         ]
       },
       UpUserIDkuang: false,
-      UpFrom :{},
-      UpFromRules : {
-         email: [
+      UpFrom: {},
+      UpFromRules: {
+        email: [
           { required: true, message: "请输入邮箱", trigger: "blur" },
           {
             validator: checkEmail,
@@ -272,20 +297,51 @@ export default {
     },
     //根据Id查询出相对应的数据渲染到编辑模板上
     async selectUserIDsj(id) {
-      const { data: res } = await this.$http.get('users/' + id)
+      const { data: res } = await this.$http.get("users/" + id);
       console.log(res);
-      this.UpFrom = res.data
+      this.UpFrom = res.data;
       this.UpUserIDkuang = true;
     },
     //修改用户数据
-    IdUpuserfrom(){
-      this.$refs.UpFrom.validate(async valid =>{
-        if(!valid) return this.$message.error('修改失败')
-        const { data: res } = await this.$http.put('users/'+ this.UpFrom.id, this.UpFrom)
-        if(res.meta.status !== 200) return this.$message.error('提交失败')
-        this.UpUserIDkuang = false
-        this.MetUser()
+    IdUpuserfrom() {
+      this.$refs.UpFrom.validate(async valid => {
+        if (!valid) return this.$message.error("修改失败");
+        const { data: res } = await this.$http.put(
+          "users/" + this.UpFrom.id,
+          this.UpFrom
+        );
+        if (res.meta.status !== 200) return this.$message.error("提交失败");
+        this.UpUserIDkuang = false;
+        this.MetUser();
+      });
+    },
+    //获取所有角色数据渲染到下拉列表中
+    async usersfp(usersj) {
+      // console.log(usersj);
+      const { data: res } = await this.$http.get(`roles`)
+      if (res.meta.status !== 200) this.$message.error('获取角色信息失败')
+      this.allUserInfo = res.data
+      //当前用户的数据
+      this.UsersInfo = usersj;
+      this.Usersfenpei = true;
+    },
+    //分配角色
+    async fpjuese(){
+      if(!this.allRolsInfo){
+        return this.$message.error('没有选择角色')
+      }
+      const { data: res } = await this.$http.put(`users/${this.UsersInfo.id}/role`, {
+        rid:this.allRolsInfo
       })
+      if (res.meta.status !== 200) {
+          return this.$message.error('请求失败')
+      }
+      this.MetUser();
+      this.Usersfenpei = false
+    },
+    fpclose(){
+      this.UsersInfo = {}
+      this.allRolsInfo = ''
     }
   }
 };
