@@ -1,6 +1,9 @@
 import Vue from 'vue'
 // import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import Timelin from './timeline/index.js'
+import TimelinItem from './timeline-item/index.js'
+
 import { Button,Form,FormItem,Input,Container,Header,Aside,Main,Message,Menu,Submenu,MenuItem,Breadcrumb,BreadcrumbItem,Card
 ,Col,Row,Table,TableColumn,Switch,Tooltip,Pagination,Dialog,MessageBox,Tag,Tree,Select,Option,Cascader,Alert,Tabs,TabPane,Steps,Step,Checkbox,CheckboxGroup,Upload} from 'element-ui'
 Vue.use(Button)
@@ -38,6 +41,8 @@ Vue.use(Step)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Upload)
+Vue.use(Timelin)
+Vue.use(TimelinItem)
 // 挂载到Vue原型下
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox 

@@ -3,7 +3,7 @@
     <!-- 头部菜单 -->
     <el-header>
       <div>
-        <img src="../assets/heima.png" alt />
+        <img src="../assets/lianjie.jpg" width="100px"/>
         <span>Tgolds</span>
       </div>
       <el-button type="info" @click="outLogin">退出登录</el-button>
