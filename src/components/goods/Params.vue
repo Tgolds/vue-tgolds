@@ -147,18 +147,18 @@
 export default {
   data() {
     return {
-      //分类数据
+      // 分类数据
       Paramshuju: [],
       //显示内容的字段
       CatePorms: {
-        value: "cat_id",
-        label: "cat_name",
-        children: "children"
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
       },
       //级联组件双向数据绑定
       xjbangding: {},
       //动态参数/静态参数
-      activeName: "many",
+      activeName: 'many',
       //动态参数
       manyData: [],
       //静态参数
@@ -167,23 +167,23 @@ export default {
       CsVisible: false,
       //添加参数属性
       AddForm: {
-        attr_name: ""
+        attr_name: ''
       },
       //添加参数的校验规则
       AddFormRules: {
-        attr_name: [{ required: true, message: "参数", trigger: "blur" }]
+        attr_name: [{ required: true, message: '参数', trigger: 'blur' }]
       },
       //修改对话框显示与yinc
       editVisible: false,
       //修改参数属性
       editForm: {
-        attr_name: ""
+        attr_name: ''
       },
       //获取到修改参数相对应的值
       editFormId: {},
       //修改参数校验
       editFormRules: {
-        attr_name: [{ required: true, message: "参数", trigger: "blur" }]
+        attr_name: [{ required: true, message: '参数', trigger: 'blur' }]
       }
     };
   },
@@ -192,30 +192,30 @@ export default {
   },
   methods: {
     async getParamsList() {
-      const { data: res } = await this.$http.get("categories");
+      const { data: res } = await this.$http.get('categories')
       if (res.meta.status !== 200) {
-        return this.$message.error("获取数据失败");
+        return this.$message.error('获取数据失败')
       }
       //   console.log(res.data);
-      this.Paramshuju = res.data;
+      this.Paramshuju = res.data
     },
     //判断是否选择的为三级分类如果不是则清空数据、、
     //如果选择了三级分类则发送请求
     handleChange() {
-      this.getAllcata();
+      this.getAllcata()
     },
     //table栏切换的时候在发送请求获取最新的数据，由于table切换的是动态或则静态参数
     handleCateClick() {
       // console.log(this.activeName);
-      this.getAllcata();
+      this.getAllcata()
     },
     //封装好的查询动态以及静态参数的方法
     async getAllcata() {
       if (this.xjbangding.length !== 3) {
         //如果没选则第三级商品分类清空动态参数和静态参数
-        this.onlyData = [];
-        this.manyData = [];
-        this.xjbangding = [];
+        this.onlyData = []
+        this.manyData = []
+        this.xjbangding = []
         return;
       }
       const { data: res } = await this.$http.get(
@@ -225,32 +225,32 @@ export default {
         }
       );
       if (res.meta.status !== 200) {
-        return this.$message.error("获取数据失败");
+        return this.$message.error('获取数据失败')
       }
       // console.log(res);
 
       // console.log(this.isfengleichangdu);
       //遍历数组取出所有可选项，并且用空格进行分割，得到一个数组
       res.data.forEach(item => {
-        item.attr_vals = item.attr_vals ? item.attr_vals.split(" ") : [];
-        (item.inputVisible = false), (item.inputValue = "");
+        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
+        (item.inputVisible = false), (item.inputValue = '')
       });
       // console.log(res.data);
-      if (this.activeName === "many") {
-        this.manyData = res.data;
+      if (this.activeName === 'many') {
+        this.manyData = res.data
       } else {
-        this.onlyData = res.data;
+        this.onlyData = res.data
       }
     },
     //对话框关闭时情况input上的值
     CloseForm() {
-      this.$refs.AddForm.resetFields();
+      this.$refs.AddForm.resetFields()
     },
     // 添加参数
     AddCateFrom() {
       this.$refs.AddForm.validate(async valid => {
         if (!valid) {
-          return this.$message.error("请输入完整的信息");
+          return this.$message.error('请输入完整的信息')
         }
         const { data: res } = await this.$http.post(
           `categories/${this.isfengleichangdu}/attributes`,
@@ -262,11 +262,11 @@ export default {
         // console.log(res);
 
         if (res.meta.status !== 201) {
-          return this.$message.error("添加参数失败");
+          return this.$message.error('添加参数失败')
         }
         // console.log(res);
-        this.getAllcata();
-        this.CsVisible = false;
+        this.getAllcata()
+        this.CsVisible = false
       });
     },
     //修改对话框关闭清空数据
@@ -284,12 +284,12 @@ export default {
         }
       );
       if (res.meta.status !== 200) {
-        return this.$message.error("查询失败");
+        return this.$message.error('查询失败')
       }
-      this.$message.success("查询成功");
+      this.$message.success('查询成功');
       // console.log(res.data.attr_name);
-      this.editForm.attr_name = res.data.attr_name;
-      this.editFormId = res.data;
+      this.editForm.attr_name = res.data.attr_name
+      this.editFormId = res.data
       // console.log(this.editFormId);
 
       this.editVisible = true;
@@ -305,58 +305,58 @@ export default {
         }
       );
       if (res.meta.status !== 200) {
-        return this.$message.error("更新失败");
+        return this.$message.error('更新失败');
       }
-      this.editVisible = false;
-      this.getAllcata();
+      this.editVisible = false
+      this.getAllcata()
     },
     //删除按钮
     async removepara(datadel) {
       const confirmRueslt = await this.$confirm(
-        "此操作将永久删除该文件, 是否继续?",
-        "提示",
+        '此操作将永久删除该文件, 是否继续?',
+        '提示',
         {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }
-      ).catch(err => err);
-      //如果用户点击确认，则confirmResult 为'confirm'
-      //如果用户点击取消, 则confirmResult获取的就是catch的错误消息'cancel'
-      if (confirmRueslt != "confirm") {
-        return this.$message.info("已经取消删除");
+      ).catch(err => err)
+      //如果用户点击确认,则confirmResult 为'confirm'
+      //如果用户点击取消,则confirmResult获取的就是catch的错误消息'cancel'
+      if (confirmRueslt !== 'confirm') {
+        return this.$message.info('已经取消删除')
       }
       // console.log(datadel);
 
       const { data: res } = await this.$http.delete(
         `categories/${this.isfengleichangdu}/attributes/${datadel.attr_id}`
-      );
+      )
       if (res.meta.status !== 200) {
-        return this.$message.error("删除失败");
+        return this.$message.error('删除失败')
       }
-      this.$message.success("删除成功");
-      this.getAllcata();
+      this.$message.success('删除成功')
+      this.getAllcata()
     },
 
     //input失去焦点 键盘按下时执行方法
     async handleInputConfirm(row) {
       if (row.inputValue.trim().length === 0) {
-        row.inputValue = "";
-        row.inputVisible = false;
-        return;
+        row.inputValue = ''
+        row.inputVisible = false
+        return
       }
-      row.attr_vals.push(row.inputValue.trim());
-      row.inputValue = "";
-      row.inputVisible = false;
-      this.seveAttrVals(row);
+      row.attr_vals.push(row.inputValue.trim())
+      row.inputValue = ''
+      row.inputVisible = false
+      this.seveAttrVals(row)
     },
     // 点击按钮时然input显示出来
     showInput(row) {
-      row.inputVisible = true;
+      row.inputVisible = true
       //在頁面属性渲染出来之后获得焦点/如果在渲染前就执行函数即会找不到相对应的Input
       this.$nextTick(_ => {
-        this.$refs.saveTagInput.$refs.input.focus();
-      });
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
     },
     // 封装对 row.attr_vals数组操作函数
     async seveAttrVals(row) {
@@ -365,58 +365,57 @@ export default {
         {
           attr_name: row.attr_name,
           attr_sel: row.attr_sel,
-          attr_vals: row.attr_vals.join(" ")
+          attr_vals: row.attr_vals.join(' ')
         }
       );
       if (res.meta.status !== 200) {
-        return this.$message.error("新增失败");
+        return this.$message.error('新增失败')
       }
-      this.$message.info("新增成功");
+        this.$message.info('新增成功')
     },
-    //删除参数
     handleClose(i, row) {
-      row.attr_vals.splice(i, 1);
-      this.seveAttrVals(row);
+      row.attr_vals.splice(i, 1)
+      this.seveAttrVals(row)
       // console.log(row.attr_vals.join(' '));
     }
   },
 
   computed: {
-    //判断是否选择了分类数据
-    //如果没选则禁言添加参数按钮
     isbtn() {
+       // 判断是否选择了分类数据
+      // 如果没选则禁言添加参数按钮
       if (this.xjbangding.length !== 3) {
-        return true;
+        return true
       }
-      return false;
+      return false
     },
     //用计算属性
     //   通过判断数组的长度
     //获取第三级分类的id
     isfengleichangdu() {
       if (this.xjbangding.length === 3) {
-        return this.xjbangding[2];
+        return this.xjbangding[2]
       }
-      return null;
+      return null
     },
     // 动态静态对话框显示
     titleText() {
-      if (this.activeName === "many") {
-        return "动态参数";
+      if (this.activeName === 'many') {
+        return '动态参数'
       }
-      return "静态参数";
+      return '静态参数'
     }
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang='less' scoped>
 .el-col {
-  margin: 10px 0;
+  margin: 10px 0
 }
 .el-tag {
-  margin-right: 10px;
+  margin-right: 10px
 }
 .el-input {
-  width: 100px;
+  width: 100px
 }
 </style>

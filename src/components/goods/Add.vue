@@ -98,9 +98,9 @@ import _ from 'lodash'
 export default {
   data() {
     return {
-      activeIndex: "0",
+      activeIndex: '0',
       addForm: {
-        goods_name: "",
+        goods_name: '',
         goods_price: 0,
         goods_weight: 0,
         goods_number: 0,
@@ -108,29 +108,29 @@ export default {
         //图片路径
         pics: [],
         //复文本数据
-        goods_introduce :"",
+        goods_introduce :'',
         attrs : []
       },
       addFormRules: {
         goods_name: [
-          { required: true, message: "请输入商品名称", trigger: "blur" }
+          { required: true, message: '请输入商品名称', trigger: 'blur' }
         ],
         goods_price: [
-          { required: true, message: "请输入商品价格", trigger: "blur" }
+          { required: true, message: '请输入商品价格', trigger: 'blur' }
         ],
         goods_weight: [
-          { required: true, message: "请输入商品重量", trigger: "blur" }
+          { required: true, message: '请输入商品重量', trigger: 'blur' }
         ],
         goods_number: [
-          { required: true, message: "请输入商品数量", trigger: "blur" }
+          { required: true, message: '请输入商品数量', trigger: 'blur' }
         ]
       },
       //商品分类数据
       allCateList: [],
       shujuzs: {
-        value: "cat_id",
-        label: "cat_name",
-        children: "children"
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
       },
 
       //   获取的动态参数数据
@@ -138,14 +138,14 @@ export default {
       //静态参数商品属性值
       onlyTabData: [],
       //图片上传路径
-      URLaction: "http://127.0.0.1:8888/api/private/v1/upload",
+      URLaction: 'http://127.0.0.1:8888/api/private/v1/upload',
       //上传组件自带了ajax发送请求，我们又配置axios请求头携带token值
       //由于上传组件发送请求不是使用axios发送的请求，需要使用到headers配置请求头
       headersObj: {
-        Authorization: window.sessionStorage.getItem("token")
+        Authorization: window.sessionStorage.getItem('token')
       },
       //图片预览路径
-      PreviewPaht: "",
+      PreviewPaht: '',
       PreviewVisible : false
     };
   },
@@ -156,7 +156,7 @@ export default {
     async getshopping() {
       const { data: res } = await this.$http.get(`categories`);
       if (res.meta.status !== 200) {
-        return this.$message.error("获取商品分类失败");
+        return this.$message.error('获取商品分类失败');
       }
       this.allCateList = res.data;
       console.log(res);
@@ -171,8 +171,8 @@ export default {
     },
     // tabs阻止切换方法
     qiehuan(activeName, oldActiveName) {
-      if (oldActiveName === "0" && this.addForm.goods_cat.length !== 3) {
-        this.$message.error("请选择商品分类");
+      if (oldActiveName === '0' && this.addForm.goods_cat.length !== 3) {
+        this.$message.error('请选择商品分类');
         return false;
       }
       //即将进入的标签名字
@@ -183,31 +183,31 @@ export default {
     //切换tab栏发送请求
     async Tabquehuan() {
       //如果点击商品参数的tab栏时发送请求获取动态或者静态参数数据
-      if (this.activeIndex === "1") {
+      if (this.activeIndex === '1') {
         const { data: res } = await this.$http.get(
           `categories/${this.catId}/attributes`,
           {
             params: {
-              sel: "many"
+              sel: 'many'
             }
           }
         );
         if (res.meta.status !== 200) {
-          return this.$message.error("获取参数失败");
+          return this.$message.error('获取参数失败');
         }
         res.data.forEach(item => {
           item.attr_vals =
-            item.attr_vals.length == 0 ? [] : item.attr_vals.split(" ");
+            item.attr_vals.length == 0 ? [] : item.attr_vals.split(' ');
         });
         this.manyTabData = res.data;
         console.log(res.data);
-      } else if (this.activeIndex === "2") {
+      } else if (this.activeIndex === '2') {
         const { data: res } = await this.$http.get(
           `categories/${this.catId}/attributes`,
-          { params: { sel: "only" } }
+          { params: { sel: 'only' } }
         );
         if (res.meta.status !== 200) {
-          this.$message.error("获取商品属性失败");
+          this.$message.error('获取商品属性失败');
         }
         this.onlyTabData = res.data;
       }
@@ -238,29 +238,29 @@ export default {
     },
      add(){
         this.$refs.addForm.validate( async valid =>{
-            if (!valid) return this.$message.error('请输入完整的值')
-            //深拷贝数据
-            const form = _.cloneDeep(this.addForm)
-            form.goods_cat = form.goods_cat.join(',')
-            //处理动态参数
-            this.manyTabData.forEach(item =>{
-                const newInfo = { attr_id:item.attr_id,attr_value:item.attr_vals.join(' ')}
-                this.addForm.attrs.push(newInfo)
-            })
-            //处理静态参数
-            this.onlyTabData.forEach( item =>{
-                const newInfo = {attr_id:item.attr_id,attr_value:item.attr_value}
-                this.addForm.attrs.push(newInfo)
-            })
-            //然后把最新的attrs数组中的数据存到深拷贝的form.attrs数组中
-            form.attrs = this.addForm.attrs
-            console.log(form);
-            const { data: res } = await this.$http.post(`goods`, form)
-            if (res.meta.status !== 201) {
-                this.$message.error('添加商品失败')
-            }
-            this.$message.success('添加商品成功')
-            this.$router.push('/goods')
+          if (!valid) return this.$message.error('请输入完整的值')
+          //深拷贝数据
+          const form = _.cloneDeep(this.addForm)
+          form.goods_cat = form.goods_cat.join(',')
+          //处理动态参数
+          this.manyTabData.forEach(item =>{
+            const newInfo = { attr_id : item.attr_id, attr_value:item.attr_vals.join(' ')}
+            this.addForm.attrs.push(newInfo)
+          })
+          //处理静态参数
+          this.onlyTabData.forEach( item =>{
+            const newInfo = { attr_id : item.attr_id, attr_value:item.attr_value }
+            this.addForm.attrs.push(newInfo)
+          })
+          //然后把最新的attrs数组中的数据存到深拷贝的form.attrs数组中
+          form.attrs = this.addForm.attrs
+          console.log(form);
+          const { data: res } = await this.$http.post(`goods`, form)
+          if (res.meta.status !== 201) {
+            this.$message.error('添加商品失败')
+          }
+          this.$message.success('添加商品成功')
+          this.$router.push('/goods')
         })
     }
   },
@@ -269,7 +269,7 @@ export default {
     // 直接当做普通属性调用不加括号
     // 任何data中数据变化立即重新计算
     // 计算属性会缓存
-    //获取第三级分类的ID值
+    // 获取第三级分类的ID值
     catId() {
       if (this.addForm.goods_cat.length === 3) {
         return this.addForm.goods_cat[2];
@@ -277,7 +277,7 @@ export default {
       return null;
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .el-step__title {
